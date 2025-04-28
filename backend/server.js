@@ -14,18 +14,27 @@ const jwt = require('jsonwebtoken');
 
 
 const corsOptions = {
-    origin: 'http://localhost:3000', 
-    credentials: true, 
-  };
+    origin: function (origin, callback) {
+        const allowedOrigins = ['http://localhost:3000', 'https://bvc-registration-ycs1.onrender.com'];
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'], 
+};
 
-  app.use(cors(corsOptions));
+app.use(cors(corsOptions));  
+
+app.options('*', cors(corsOptions)); 
 
 app.use('/api/users', userRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/messages', messageRoutes);
 
-//Better practice to use a different password
-//Also better to store in a different .env file for security reasons
 app.use(session({
     secret: 'your-secret-key',
     resave: false,
@@ -33,7 +42,6 @@ app.use(session({
     cookie: { secure: false } 
   }));
 
-//connection to mongodb
 const dbURI = 'mongodb+srv://Maria:12345@bvcregistration.qf6qh.mongodb.net/?retryWrites=true&w=majority&appName=BVCRegistration'; 
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => {
