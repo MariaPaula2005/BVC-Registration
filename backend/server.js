@@ -12,22 +12,7 @@ const app = express();
 app.use(express.json());
 const jwt = require('jsonwebtoken');
 
-
-const corsOptions = {
-    origin: function (origin, callback) {
-        const allowedOrigins = ['http://localhost:3000', 'https://bvc-registration-ycs1.onrender.com'];
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'], 
-};
-
-app.use(cors(corsOptions));  
+app.use(cors());  
 
 app.options('*', cors(corsOptions)); 
 
