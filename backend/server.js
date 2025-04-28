@@ -14,8 +14,6 @@ const jwt = require('jsonwebtoken');
 
 app.use(cors());  
 
-app.options('*', cors(corsOptions)); 
-
 app.use('/api/users', userRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/messages', messageRoutes);
